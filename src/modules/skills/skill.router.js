@@ -1,12 +1,11 @@
 import express from "express";
-import { createSkillControler, skillControler, updateSkillControler } from "./skill.cotroler.js";
+import { createSkillControler, deleteSkillControler, skillControler, updateSkillControler } from "./skill.cotroler.js";
 
 const router = express.Router();
 
 
 router.get("/get-skills", skillControler);
 router.post("/create-skills", createSkillControler)
-router.patch("/update-skills/:id", updateSkillControler)
-// router.delete("/remove-skill", )
+router.delete("/remove-skill/:id", deleteSkillControler)
 
 export const skillRouter = router

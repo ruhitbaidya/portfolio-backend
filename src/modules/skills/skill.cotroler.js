@@ -2,10 +2,15 @@ import { skillModel } from "./skill.mode.js";
 
 
 export const skillControler = async(req, res)=>{
+  try{
+    const result = await skillModel.find();
     res.json({
-        message : "this will help us",
-        status : 200
+        message : "Data Get Successfully",
+        data : result
     })
+  }catch(err){
+    console.log(err)
+  }
 }
 
 export const createSkillControler = async(req, res)=>{
@@ -32,6 +37,18 @@ export const createSkillControler = async(req, res)=>{
    }
 }
 
+export const deleteSkillControler = async(req, res)=>{
+    try{
+        const id = req?.params?.id
+        const result = await skillModel.deleteOne({_id:id});
+        res.json({
+            message : "Data deleted",
+            data : result
+        })
+    }catch(err){
+        console.log(err)
+    }
+}
 export const updateSkillControler = async(req, res)=>{
     try{
         console.log(req.params.id)
