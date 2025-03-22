@@ -46,7 +46,7 @@ export const createBlogControler = async(req, res)=>{
 
 export const updateBlogControler = async(req, res)=>{
     try{
-        const {content, image} = req.body
+        const {content, image} = req.body;
         const id = req.params.id;
         const result = await blogModel.findByIdAndUpdate({_id:id}, {$set:{content, image}});
         return res.json({
@@ -57,7 +57,6 @@ export const updateBlogControler = async(req, res)=>{
         console.log(err)
     }
 }
-
 
 export const deleteBlog = async(req, res)=>{
     try{
