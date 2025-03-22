@@ -1,4 +1,4 @@
-import { getToken } from "./tokenGen";
+import { getToken } from "./tokenGen.js";
 
 export const loginControler = async(req , res)=>{
     try{
@@ -6,7 +6,7 @@ export const loginControler = async(req , res)=>{
         if(email === "ruhitbaidya01@gmail.com" && password === "ruhit017"){
             return res.json({
                 message : "Successfull Login",
-                data : getToken()
+                token : await getToken()
             })
         }else{
             return res.json({
