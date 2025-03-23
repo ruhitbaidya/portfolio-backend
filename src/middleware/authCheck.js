@@ -1,9 +1,8 @@
 import jwt from "jsonwebtoken"
-import { config } from "../config/config";
+import { config } from "../config/config.js";
 export const tokenVerify = async(req , res , next)=>{
     try{
         const token = req.headers.authorization;
-        console.log(token)
         if(!token){
             return res.json({
                 message : "Unauthorize User",
@@ -13,7 +12,14 @@ export const tokenVerify = async(req , res , next)=>{
 
         if(token){
             const verify = jwt.verify(token, config.token_sec);
-            console.log(verify)
+            if(verify.role === "admin"){
+                next()
+            }else{
+                return res.json({
+                    message : "Unauthorize User",
+                    success : false
+                }) 
+            }
         }
     }catch(err){
         return res.json({
@@ -21,4 +27,7 @@ export const tokenVerify = async(req , res , next)=>{
             success : false
         })
     }
+
 }
+
+
