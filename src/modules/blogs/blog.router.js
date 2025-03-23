@@ -4,7 +4,7 @@ import { createBlogControler, deleteBlog, getAllBlog, getSingalBlog, updateBlogC
 const router = express.Router();
 
 router.get("/get-blog", getAllBlog);
-router.get("get-singal-blog/:id", getSingalBlog);
+router.get("/get-singal-blog/:id", getSingalBlog);
 router.patch("/update-blog/:id", updateBlogControler)
 router.delete("/delete-blog/:id", deleteBlog)
 router.post("/create-blog", createBlogControler)

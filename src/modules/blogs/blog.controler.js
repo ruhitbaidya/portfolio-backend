@@ -15,7 +15,7 @@ export const getAllBlog = async(req , res)=>{
 export const getSingalBlog = async(req, res)=>{
     try{
         const id = req.params.id;
-        const result = blogModel.findById({_id: id});
+        const result = await blogModel.findById(id);
         res.json({
             message : "get Sucess Blog",
             data : result
