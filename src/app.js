@@ -3,13 +3,13 @@ import cors from "cors";
 import { rootRouter } from "./router/routes.js";
 import nodemailer from "nodemailer"
 const app = express();
-
-app.use(cors(
-    {
-        origin : ["http://localhost:5174"],
-        credentials : true
-    }
-))
+const corsOptions = {
+    origin: ["http://localhost:5174", "https://my-dashboard-sigma-ochre.vercel.app","https://ruhitbaidya.vercel.app"],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], 
+    allowedHeaders: ["Content-Type", "Authorization"],
+  };
+app.use(cors(corsOptions))
 app.use(express.json());
 app.use(urlencoded({extended : true}))
 app.use(rootRouter)
