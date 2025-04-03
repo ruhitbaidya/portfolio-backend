@@ -1,18 +1,23 @@
 import express, { urlencoded } from "express";
 import cors from "cors";
 import { rootRouter } from "./router/routes.js";
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
 const app = express();
 const corsOptions = {
-    origin: ["http://localhost:5174", "https://my-dashboard-sigma-ochre.vercel.app","https://ruhitbaidya.vercel.app"],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], 
-    allowedHeaders: ["Content-Type", "Authorization"],
-  };
-app.use(cors(corsOptions))
+  origin: [
+    "http://localhost:5174",
+    "http://localhost:5173",
+    "https://my-dashboard-sigma-ochre.vercel.app",
+    "https://ruhitbaidya.vercel.app",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
-app.use(urlencoded({extended : true}))
-app.use(rootRouter)
+app.use(urlencoded({ extended: true }));
+app.use(rootRouter);
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -49,6 +54,4 @@ app.post("/sendMessage", async (req, res) => {
   }
 });
 
-
-
-export default app
+export default app;
