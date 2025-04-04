@@ -14,8 +14,8 @@ export const skillControler = async (req, res) => {
 
 export const createSkillControler = async (req, res) => {
   try {
-    const { icon, title } = req.body;
-    if (icon === "" || title === "") {
+    const { icon, title, color } = req.body;
+    if (icon === "" || title === "", color === "") {
       return res.json({
         message: "please give reall information",
         status: 404,
