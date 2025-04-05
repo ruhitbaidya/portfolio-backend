@@ -6,8 +6,6 @@ const app = express();
 const corsOptions = {
   origin: "*",
   credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions));
 app.use(express.json());
@@ -24,13 +22,14 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 app.post("/sendMessage", async (req, res) => {
-  const datas = req.body;
-  const info = await transporter.sendMail({
-    from: `${datas.name} <ruhitbaidya01@gmail.com>`, // sender address
-    to: "ruhitbaidya01@gmail.com", // list of receivers
-    subject: "WebSite Request", // Subject line
-    text: "Hello world?", // plain text body
-    html: `
+  try {
+    const datas = req.body;
+    const info = await transporter.sendMail({
+      from: `${datas.name} <ruhitbaidya01@gmail.com>`, // sender address
+      to: "ruhitbaidya01@gmail.com", // list of receivers
+      subject: "WebSite Request", // Subject line
+      text: "Hello world?", // plain text body
+      html: `
            <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; line-height: 1.6;">
     <div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: #ffffff; border: 1px solid #cccccc; border-radius: 8px;">
         <div style="background-color: #70bbd9; padding: 20px; text-align: center; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
@@ -43,11 +42,14 @@ app.post("/sendMessage", async (req, res) => {
     </div>
 </div>
         `, // html body
-  });
+    });
 
-  //   console.log("Message sent: %s", info.messageId);
-  if (info.messageId) {
-    res.send({ success: true, message: "Message Send Successfully" });
+    //   console.log("Message sent: %s", info.messageId);
+    if (info.messageId) {
+      res.send({ success: true, message: "Message Send Successfully" });
+    }
+  } catch (err) {
+    console.log(err);
   }
 });
 
