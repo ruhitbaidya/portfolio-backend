@@ -19,7 +19,10 @@ const transporter = nodemailer.createTransport({
   },
 });
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.json({
+    status: 200,
+    message: "Hello World! this proje",
+  });
 });
 app.post("/sendMessage", async (req, res) => {
   try {
