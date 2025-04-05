@@ -1,9 +1,11 @@
 import express from "express";
-import { subscribeCreateControler } from "./subscribe.controler";
+import {
+  getAllSubscribeControler,
+  subscribeCreateControler,
+} from "./subscribe.controler.js";
 
 const router = express.Router();
 
-
 router.post("/subscribe", subscribeCreateControler);
-
-export const subscribeRouter = router
+router.get("/get-subscribe", getAllSubscribeControler);
+export const subscribeRouter = router;
