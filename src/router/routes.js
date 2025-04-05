@@ -3,6 +3,7 @@ import { skillRouter } from "../modules/skills/skill.router.js";
 import { blogRouter } from "../modules/blogs/blog.router.js";
 import { projectRouter } from "../modules/projects/project.router.js";
 import { loginRouter } from "../auth/auth.router.js";
+import { subscribeRouter } from "../modules/subscribe/subscribe.router.js";
 const router = express.Router();
 const routers = [
     {
@@ -20,6 +21,10 @@ const routers = [
     {
         path : "/",
         element : loginRouter
+    },
+    {
+        path : "/",
+        element : subscribeRouter
     }
 ];
 
