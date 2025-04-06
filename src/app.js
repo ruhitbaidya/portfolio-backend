@@ -1,58 +1,97 @@
-import express, { urlencoded } from "express";
+import express from "express";
 import cors from "cors";
 import { rootRouter } from "./router/routes.js";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+// Load environment variables
+dotenv.config();
+
 const app = express();
+
+// CORS configuration
 const corsOptions = {
-  origin: "*",
+  origin: process.env.ALLOWED_ORIGINS?.split(",") || "*",
   credentials: true,
+  optionsSuccessStatus: 200,
 };
+
+// Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(urlencoded({ extended: true }));
-app.use(rootRouter);
+app.use(express.urlencoded({ extended: true }));
+
+// Email transporter setup
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "ruhitbaidya01@gmail.com",
+    user: process.env.EMAIL_USER || "ruhitbaidya01@gmail.com",
     pass: process.env.emailpasswor,
   },
 });
+
+// Verify transporter connection
+transporter.verify((error) => {
+  if (error) {
+    console.error("❌ Email transporter error:", error);
+  } else {
+    console.log("✅ Email transporter is ready");
+  }
+});
+
+// Routes
+app.use("/", rootRouter);
+
 app.get("/", (req, res) => {
   res.json({
     status: 200,
-    message: "Hello World! this proje",
+    message: "Hello World! this project is running",
+    environment: process.env.NODE_ENV || "development",
   });
 });
+
 app.post("/sendMessage", async (req, res) => {
   try {
-    const datas = req.body;
-    const info = await transporter.sendMail({
-      from: `${datas.name} <ruhitbaidya01@gmail.com>`, // sender address
-      to: "ruhitbaidya01@gmail.com", // list of receivers
-      subject: "WebSite Request", // Subject line
-      text: "Hello world?", // plain text body
-      html: `
-           <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; line-height: 1.6;">
-    <div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: #ffffff; border: 1px solid #cccccc; border-radius: 8px;">
-        <div style="background-color: #70bbd9; padding: 20px; text-align: center; color: #ffffff; border-top-left-radius: 8px; border-top-right-radius: 8px;">
-            <h1 style="margin: 0; font-size: 28px;">${datas.name}</h1>
-        </div>
-        <div style="padding: 20px;">
-            <h2 style="color: #153643; font-size: 24px;">${datas.email}</h2>
-            <p style="color: #153643; font-size: 16px; margin-bottom: 20px;">${datas.message}</p>
-        </div>
-    </div>
-</div>
-        `, // html body
-    });
+    const { name, email, message } = req.body;
 
-    //   console.log("Message sent: %s", info.messageId);
-    if (info.messageId) {
-      res.send({ success: true, message: "Message Send Successfully" });
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "Name, email and message are required",
+      });
     }
+
+    const mailOptions = {
+      from: `"${name}" <${
+        process.env.EMAIL_USER || "ruhitbaidya01@gmail.com"
+      }>`,
+      to: process.env.EMAIL_RECEIVER || "ruhitbaidya01@gmail.com",
+      replyTo: email,
+      subject: "New Website Contact Request",
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #153643;">New Contact Request</h2>
+          <p><strong>From:</strong> ${name} (${email})</p>
+          <p><strong>Message:</strong></p>
+          <p style="white-space: pre-wrap;">${message}</p>
+        </div>
+      `,
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+
+    res.json({
+      success: true,
+      message: "Message sent successfully",
+      messageId: info.messageId,
+    });
   } catch (err) {
-    console.log(err);
+    console.error("Email send error:", err);
+    res.status(500).json({
+      success: false,
+      message: "Failed to send message",
+      error: process.env.NODE_ENV === "development" ? err.message : undefined,
+    });
   }
 });
 
