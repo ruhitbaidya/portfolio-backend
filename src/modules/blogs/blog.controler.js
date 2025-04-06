@@ -4,7 +4,7 @@ export const getAllBlog = async (req, res) => {
   try {
     const result = await blogModel.find();
     res.json({
-      message: "Blog  Found",
+      message: "All Blog Found",
       data: result,
     });
   } catch (err) {
